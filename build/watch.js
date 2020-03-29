@@ -9,5 +9,5 @@ spicyhtml.watch({
   props: {
     author: 'Tariq Qubti',
   },
-  output: 'public',
+  output: 'docs',
 });

@@ -1,21 +1,22 @@
 <style>
   .sidebar {
     padding: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow: auto;
-  }
-  .sidebar-header {
-    margin-bottom: 25px;
-    text-align: center;
   }
   .sidebar .logo {
     width: 50px;
   }
+  .sidebar .ul {
+    margin: 50px 0;
+    flex-grow: 1;
+  }
 </style>
 
 <div class="sidebar">
-  <div class="sidebar-header">
-    <com.Logo />
-  </div>
+  <com.Logo />
   <com.list.Ul>
     <com.list.Link
       to="#spicy-html-a-spicy-html-builder"
@@ -33,4 +34,5 @@
     <com.list.Link to="#example" inner="Example" />
     <com.list.Link to="#dependencies" inner="Dependencies" />
   </com.list.Ul>
+  <com.Github />
 </div>

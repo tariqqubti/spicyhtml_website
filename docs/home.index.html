@@ -132,14 +132,17 @@
 
   .sidebar {
     padding: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow: auto;
-  }
-  .sidebar-header {
-    margin-bottom: 25px;
-    text-align: center;
   }
   .sidebar .logo {
     width: 50px;
+  }
+  .sidebar .ul {
+    margin: 50px 0;
+    flex-grow: 1;
   }
 /* com.list.Ul */
 
@@ -152,6 +155,11 @@
 
   .li {
     padding: 5px 0;
+  }
+/* com.Github */
+
+  .github {
+    text-align: center;
   }
 </style>
 </head>
@@ -432,14 +440,12 @@ It could be the header, the whole html document, just a script or a style tag, e
   
 
 <div class="sidebar">
-  <div class="sidebar-header">
-    
+  
 <img
   class="logo"
   src="./img/spicyhtml-logo.png"
   alt="Spicy Html Logo"
 >
-  </div>
   
 
 <ul class="ul">
@@ -491,6 +497,13 @@ It could be the header, the whole html document, just a script or a style tag, e
 </li>
   
 </ul>
+  
+
+<div class="github">
+  <a class="link" href="https://github.com/tariqqubti/spicyhtml_website">
+    <img src="./img/github.png">
+  </a>
+</div>
 </div>
 </div>
 
