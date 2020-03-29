@@ -120,14 +120,17 @@
 
   .sidebar {
     padding: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow: auto;
-  }
-  .sidebar-header {
-    margin-bottom: 25px;
-    text-align: center;
   }
   .sidebar .logo {
     width: 50px;
+  }
+  .sidebar .ul {
+    margin: 50px 0;
+    flex-grow: 1;
   }
 /* com.list.Ul */
 
@@ -140,6 +143,11 @@
 
   .li {
     padding: 5px 0;
+  }
+/* com.Github */
+
+  .github {
+    text-align: center;
   }</style></head><body><div id="index" class="app"><div class="toolbar"><svg class="burger" viewBox="0 0 12 12"><line x1="1" y1="3" x2="11" y2="3"/><line x1="1" y1="6" x2="11" y2="6"/><line x1="1" y1="9" x2="11" y2="9"/></svg> <img class="logo" src="./img/spicyhtml-logo.png" alt="Spicy Html Logo"></div><main class="main"><div class="wrapper"><h2 id="spicy-html-a-spicy-html-builder">Spicy Html (A spicy html builder)</h2><p>A tool that helps encapsulate html components and makes it easy to reference and compose them.</p><p>It also enables customization of html components at build time using props.</p><p>It will also group all styles and scripts at build time to allow for smaller file sizes.</p><h2 id="installation">Installation</h2><pre><code class="language-sh">npm install spicyhtml --save</code></pre><h2 id="usage">Usage</h2><p>Programmatically:</p><pre><code class="language-js"><span class="hljs-keyword">const</span> {build} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
 
 build({
@@ -297,7 +305,7 @@ build({
       })();
     </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre><h2 id="dependencies">Dependencies</h2><ul><li>node &gt;= 10</li><li>chokidar (for watcher)</li></ul></div></main><div class="sidebar"><div class="sidebar-header"><img class="logo" src="./img/spicyhtml-logo.png" alt="Spicy Html Logo"></div><ul class="ul"><li class="li"><a class="link" href="#spicy-html-a-spicy-html-builder">Overview</a></li><li class="li"><a class="link" href="#installation">Installation</a></li><li class="li"><a class="link" href="#usage">Usage</a></li><li class="li"><a class="link" href="#components">Components</a></li><li class="li"><a class="link" href="#references">References</a></li><li class="li"><a class="link" href="#props">Props</a></li><li class="li"><a class="link" href="#styles-and-scripts">Styles and Scripts</a></li><li class="li"><a class="link" href="#example">Example</a></li><li class="li"><a class="link" href="#dependencies">Dependencies</a></li></ul></div></div><script>/* com.Tqjs */
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre><h2 id="dependencies">Dependencies</h2><ul><li>node &gt;= 10</li><li>chokidar (for watcher)</li></ul></div></main><div class="sidebar"><img class="logo" src="./img/spicyhtml-logo.png" alt="Spicy Html Logo"><ul class="ul"><li class="li"><a class="link" href="#spicy-html-a-spicy-html-builder">Overview</a></li><li class="li"><a class="link" href="#installation">Installation</a></li><li class="li"><a class="link" href="#usage">Usage</a></li><li class="li"><a class="link" href="#components">Components</a></li><li class="li"><a class="link" href="#references">References</a></li><li class="li"><a class="link" href="#props">Props</a></li><li class="li"><a class="link" href="#styles-and-scripts">Styles and Scripts</a></li><li class="li"><a class="link" href="#example">Example</a></li><li class="li"><a class="link" href="#dependencies">Dependencies</a></li></ul><div class="github"><a class="link" href="https://github.com/tariqqubti/spicyhtml_website"><img src="./img/github.png"></a></div></div></div><script>/* com.Tqjs */
 (function() {
 
   function loop(arr, cb) {
