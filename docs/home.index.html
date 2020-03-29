@@ -1,0 +1,819 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="html,css,js,builder">
+  <meta name="description" content="Spicy Html Builder">
+  <meta name="author" content="Tariq Qubti">
+  <title>Spicy Html</title>
+<style>
+/* com.Doc */
+
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    margin: 0; padding: 0;
+    font-family: monospace;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 25px;
+  }
+  @media (max-width: 768px) {
+    html {scroll-padding-top: 100px}
+  }
+/* com.Style */
+
+  body {
+    background-color: #fdf8cf;
+  }
+  .sidebar, .toolbar, pre, .code {
+    background-color: #fff6a4;
+  }
+  h1, h2, h3, a, pre, .code {
+    color: #3f51b5;
+  }
+  p, li, a:hover {
+    color: #2196f3;
+  }
+  .burger {
+    stroke: #3f51b5;
+  }
+  a {
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  h1, h2, h3 {
+    letter-spacing: 1px;
+  }
+  h2 {
+    font-style: italic;
+  }
+  p, li, pre, .code {
+    line-height: 1.8;
+  }
+  p, li, .sidebar .link, .code {
+    font-size: 1.3rem;
+  }
+
+  pre {
+    padding: 25px;
+    border-radius: 10px;
+    overflow: auto;
+  }
+
+  li {
+    padding: 5px 0;
+  }
+/* com.App */
+
+  .app {
+    height: 100%;
+  }
+  .app .toolbar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: none;
+  }
+  .app .main {
+    margin-left: 250px;
+    padding-top: 25px;
+  }
+  .app .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 250px; height: 100%;
+    transition: left .2s;
+  }
+  @media (max-width: 768px) {
+    /* small */
+    .app .toolbar {display: flex}
+    .app .main {margin-left: 0; padding-top: 100px}
+    .app .sidebar {left: -250px}
+  }
+  .app .sidebar.open {left: 0}
+  .app .sidebar.close {left: -250px}
+/* com.Toolbar */
+
+  .toolbar {
+    padding: 25px;
+    align-items: center;
+    justify-content: space-between;
+  }
+/* com.Burger */
+
+  .burger {
+    height: 25px;
+    width: auto;
+  }
+/* com.Logo */
+
+  .logo {
+    width: 35px;
+  }
+/* com.Main */
+
+  .main {
+    padding: 25px;
+  }
+  .main .wrapper {
+    margin: 0 auto;
+    max-width: 600px;
+  }
+/* com.Sidebar */
+
+  .sidebar {
+    padding: 45px;
+    overflow: auto;
+  }
+  .sidebar-header {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  .sidebar .logo {
+    width: 50px;
+  }
+/* com.list.Ul */
+
+  .ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+/* com.list.Li */
+
+  .li {
+    padding: 5px 0;
+  }
+</style>
+</head>
+<body>
+  
+
+  
+  
+  
+
+<div id="index" class="app">
+  
+
+<div class="toolbar">
+  
+
+<svg
+  class="burger"
+  viewBox="0 0 12 12"
+>
+  <line x1=1 y1=3 x2=11 y2=3 />
+  <line x1=1 y1=6 x2=11 y2=6 />
+  <line x1=1 y1=9 x2=11 y2=9 />
+</svg>
+  
+<img
+  class="logo"
+  src="./img/spicyhtml-logo.png"
+  alt="Spicy Html Logo"
+>
+</div>
+  
+<main class="main">
+  <div class="wrapper">
+    
+    
+    
+<h2 id="spicy-html-a-spicy-html-builder">Spicy Html (A spicy html builder)</h2>
+<p>A tool that helps encapsulate html components and makes it easy to reference and compose them.</p>
+<p>It also enables customization of html components at build time using props.</p>
+<p>It will also group all styles and scripts at build time to allow for smaller file sizes.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-sh">npm install spicyhtml --save</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Programmatically:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> {build} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
+
+build({
+  <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'My awesome site'</span>,
+    <span class="hljs-attr">primary</span>: <span class="hljs-string">'#333'</span>,
+  },
+  <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
+});</code></pre>
+<h2 id="components">Components</h2>
+<p>Any <code>.html</code> file within your project can be a component.
+It could be the header, the whole html document, just a script or a style tag, even plain text can be a component anything really can be a component.</p>
+<h2 id="references">References</h2>
+<p>You can reference components from other components. </p>
+<p>The rule is any tag with a name that either:</p>
+<ul>
+<li>Contains a dot e.g.  <code>&lt;com.Home /&gt;</code></li>
+<li>Starts with a Capital letter e.g. <code>&lt;Link /&gt;</code></li>
+</ul>
+<p>The root parameter sent to the build command will be the parent for all your components.</p>
+<p>For example if the root is <code>/home/projects/foo</code></p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- /home/projects/foo/pages/layout/Main.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span></code></pre>
+<p>Will be referenced (from anywhere) like:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- home/projects/foo/com/About.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">pages.layout.Main</span>&gt;</span>
+  Stuff
+<span class="hljs-tag">&lt;/<span class="hljs-name">pages.layout.Main</span>&gt;</span></code></pre>
+<p>And</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Sidebar.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'sidebar'</span>&gt;</span>
+  ...sidebar stuff
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>Will be referenced by:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/OtherComponent.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com.Sidebar</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<h2 id="props">Props</h2>
+<p>You can send values to components in order to customize them.</p>
+<p>For example if the reference:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Field</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">Label</span>=<span class="hljs-string">"Name"</span> /&gt;</span></code></pre>
+<p>And the component:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Field.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"field"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>__label__<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"__type__"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>The output would be:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- Output --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"field"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>Name<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>All __prop_name__ values inside the component will be replaced with what was sent in the reference.</p>
+<p>Prop names are surrounded by two underscores.</p>
+<p>Props will propagate, what you send as props to some component will trickle down to its referenced components unless they were overridden down the tree.</p>
+<h3 id="the-special-inner-prop">The special <code>inner</code> prop</h3>
+<p><code></code> will act as the place holder for the reference inner value, for example:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Link.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"__to__"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Reference --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">com.Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/about"</span>&gt;</span>About<span class="hljs-tag">&lt;/<span class="hljs-name">com.Link</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Output --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/about"</span>&gt;</span>About<span class="hljs-tag">&lt;<span class="hljs-name">a</span>&gt;</span></code></pre>
+<p>You can also specify inner as a prop, if you don&#39;t want to bother writing a closing tag.</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/about"</span> <span class="hljs-attr">inner</span>=<span class="hljs-string">"About"</span> /&gt;</span></code></pre>
+<p>Though if the reference tag is not self-closing and actually have something inside, it will override the inner prop.</p>
+<h2 id="styles-and-scripts">Styles and Scripts</h2>
+<p>The builder will cache all styles and scripts tags it encounters during building, and add the first instance of them in the end of the building process.</p>
+<p>Adding the styles just before the ending of the <code>&lt;head&gt;</code> tag, and scripts just before the ending of the <code>&lt;body&gt;</code> tag.</p>
+<p>All scripts will be wrapped with a self invoking function, so you don&#39;t need to worry about overwriting an existing variable.</p>
+<pre><code class="language-html">...
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+  <span class="hljs-comment">/* com.Link */</span>
+  <span class="hljs-selector-class">.link</span> {<span class="hljs-attribute">color</span>: red}
+  <span class="hljs-comment">/* com.Field */</span>
+  <span class="hljs-selector-class">.field</span> <span class="hljs-selector-class">.input</span> {<span class="hljs-attribute">padding</span>: <span class="hljs-number">5px</span>}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">
+  (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">/* com.Link */</span>
+    <span class="hljs-keyword">var</span> foo = <span class="hljs-number">42</span>;
+  })();
+  (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">/* com.Field */</span>
+    <span class="hljs-keyword">var</span> foo = <span class="hljs-number">42</span>;
+  })();
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+...</code></pre>
+<h2 id="whats-the-point">What&#39;s the point</h2>
+<ul>
+<li>Encapsulate static html files using components.</li>
+<li>Reuse static html files by referencing them from other files.</li>
+<li>Small file sizes, check <a href="https://spicyhtml.com">Spicy Html</a> file sizes on dev tools, it&#39;s built with Spicy Html.</li>
+<li>Keeps the browser happy.</li>
+<li>The fact of the matter is that most users will view your website on bloated 8GB RAM machines, those machines do not like too much JavaScript.</li>
+<li>Work with html not against it, this tool is just a small step that makes working with static html a pleasure.</li>
+<li>Works well with BEM CSS methodology.</li>
+</ul>
+<h2 id="example">Example</h2>
+<ul>
+<li>There is a <a href="https://github.com/tariqqubti/spicyhtml/tree/master/example">small example</a> in this repo.</li>
+<li>Here is a quick example:</li>
+</ul>
+<pre><code>my-awesome-site
+  |--&gt; com
+    |-- Hero.html
+    |-- Document.html
+    |-- Sidebar.html
+    |-- Main.html
+  |--&gt; pages
+    |-- index.html
+    |-- about.html
+    |-- contact.html</code></pre><pre><code class="language-html"><span class="hljs-comment">&lt;!-- pages/index.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">com.Document</span>
+  <span class="hljs-attr">title</span>=<span class="hljs-string">"Home"</span>
+  <span class="hljs-attr">desc</span>=<span class="hljs-string">"my-awesome-site-home"</span>
+&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com.Hero</span> /&gt;</span>
+  Hello and welcome to __name__
+<span class="hljs-tag">&lt;/<span class="hljs-name">com.Document</span>&gt;</span></code></pre>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Document.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"Spicy Html Builder"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Spicy Html<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">com.Sidebar</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Spicy Html<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">com.Main</span>&gt;</span>
+      
+    <span class="hljs-tag">&lt;/<span class="hljs-name">com.Main</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Hero.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+  <span class="hljs-selector-class">.hero</span> {
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">2rem</span>;
+  }
+  <span class="hljs-selector-class">.slide</span> {
+    <span class="hljs-attribute">background-color</span>: __primary__;
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'hero'</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide one<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide two<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-comment">// Your java script will be tucked inside</span>
+  <span class="hljs-comment">// a self-invoking function.</span>
+  <span class="hljs-keyword">const</span> slides = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.slide'</span>);
+  <span class="hljs-comment">// do stuff...</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>And build with</p>
+<pre><code class="language-js">build({
+  <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'My awesome site'</span>,
+    <span class="hljs-attr">primary</span>: <span class="hljs-string">'#333'</span>,
+  },
+  <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
+});</code></pre>
+<p>And output</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- index.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"my-awesome-site-home"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+      <span class="hljs-selector-class">.hero</span> {
+        <span class="hljs-attribute">padding</span>: <span class="hljs-number">2rem</span>;
+      }
+      <span class="hljs-selector-class">.slide</span> {
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#333</span>;
+      }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"sidebar"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'hero'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide one<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide two<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      Hello and welcome to My awesome site
+    <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+      (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-comment">/* com.Hero */</span>
+        <span class="hljs-keyword">const</span> slides = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.slide'</span>);
+      })();
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>node &gt;= 10</li>
+<li>chokidar (for watcher)</li>
+</ul>
+
+  
+  
+  </div>
+</main>
+
+  
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    
+<img
+  class="logo"
+  src="./img/spicyhtml-logo.png"
+  alt="Spicy Html Logo"
+>
+  </div>
+  
+
+<ul class="ul">
+  
+    
+
+<li class="li">
+  <a class="link" href="#spicy-html-a-spicy-html-builder">Overview</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#installation">Installation</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#usage">Usage</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#components">Components</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#references">References</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#props">Props</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#styles-and-scripts">Styles and Scripts</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#example">Example</a>
+</li>
+    
+
+<li class="li">
+  <a class="link" href="#dependencies">Dependencies</a>
+</li>
+  
+</ul>
+</div>
+</div>
+
+
+
+
+<script>
+/* com.Tqjs */
+(function() {
+
+  function loop(arr, cb) {
+    var arr = [];
+    var len = arr.length;
+    for(var i = 0; i < len; i++) {
+      var res = cb(arr[i], i);
+      if(res === loop.break)
+        break;
+      if(typeof res !== 'undefined')
+        arr.push(res);
+    }
+    return arr;
+  }
+  loop.break = '__break__';
+
+  function each(obj, cb) {
+    var arr = [];
+    for(var key in obj) {
+      if(!obj.hasOwnProperty(key))
+        continue;
+      var res = cb(obj[key], key);
+      if(res === each.break)
+        break;
+      if(typeof res !== 'undefined')
+        arr.push(res);
+    }
+    return arr;
+  }
+  each.break = '__break__';
+
+  function find(sel) {
+    return document.querySelector(sel);
+  }
+
+  function on(el, event, cb) {
+    if(el.attachEvent) el.attachEvent(event, cb);
+    else el.addEventListener(event, cb);
+    return cb;
+  }
+
+  function inside(el, e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    var rect = this.el.getBoundingClientRect();
+    return x > rect.left && x < rect.right &&
+      y > rect.top && y < rect.bottom;
+  }
+
+  const cls = {
+    get: function(el) {
+      return el.className.split(' ');
+    },
+    set: function(el, arr) {
+      el.className = arr.join(' ');
+    },
+    has: function(el, c) {
+      this.get(el).indexOf(c) !== -1;
+    },
+    add: function(el, c) {
+      var arr = this.get(el);
+      if(arr.indexOf(c) === -1) {
+        arr.push(c);
+        this.set(el, arr);
+      }
+    },
+    remove: function(el, c) {
+      var arr = this.get(el);
+      var i = arr.indexOf(c);
+      if(i !== -1) {
+        arr.splice(i, 1);
+        this.set(el, arr);
+      }
+    },
+    replace: function(el, c1, c2) {
+      this.remove(el, c1);
+      this.add(el, c2);
+    }
+  }
+
+  function bisect(str, separator) {
+    var i = str.indexOf(separator);
+    return [
+      str.substring(0, i),
+      str.substring(i + 1),
+    ];
+  }
+
+  function Trait(el) {
+    this.el = el;
+  }
+  Trait.alias = {
+    html: 'innerHTML',
+    'false': false,
+    'true': true,
+    get: function(key) {
+      return this[key] || key;
+    },
+  }
+  Trait.prototype.get = function(key, what) {
+    key = Trait.alias.get(key);
+    if(what === 'att')
+      return this.el.getAttribute(key);
+    return this.el[key];
+  }
+  Trait.prototype.set = function(key, val, what) {
+    key = Trait.alias.get(key);
+    val = Trait.alias.get(val);
+    if(what === 'att')
+      this.el.setAttribute(key, val);
+    else
+      this.el[key] = val;
+  }
+
+  function Cls(el) {
+    this.el = el;
+  }
+  Cls.prototype.has = function(c) {
+    return cls.has(this.el, c);
+  }
+  Cls.prototype.add = function(c) {
+    cls.add(this.el, c);
+  }
+  Cls.prototype.remove = function(c) {
+    cls.remove(this.el, c);
+  }
+  Cls.prototype.replace = function(c1, c2) {
+    cls.replace(this.el, c1, c2);
+  }
+
+  function El(el) {
+    this.el = el;
+    this.trait = new Trait(el);
+    this.cls = new Cls(el);
+  }
+  El.find = function(selector, parent) {
+    if(!parent)
+      parent = document;
+    var el = parent.querySelector(selector);
+    if(el)
+      return new El(el);
+    return null;
+  }
+  El.findAll = function(selector, parent) {
+    if(!parent)
+      parent = document;
+    var els = parent.querySelectorAll(selector);
+    if(els && els.length > 0)
+      return loop(els, function(el) {
+        return new El(el);
+      });
+    return [];
+  }
+  El.byId = function(id, parent) {
+    if(!parent)
+      parent = document;
+    return new El(parent.getElementById(id));
+  }
+  El.byClass = function(cls, parent) {
+    if(!parent)
+      parent = document;
+    parent.getElementsByClassName(cls).map(el => new El(el));
+  }
+  El.on = function(el, event, cb) {
+    if(el.attachEvent)
+      el.attachEvent(event, cb);
+    else
+      el.addEventListener(event, cb);
+    return cb;
+  }
+  El.onScrollFinish = function(cb, after) {
+    if(typeof after === 'undefined')
+      after = 300;
+    var doc = document.documentElement;
+    var timeoutId = null;
+    El.on(window, 'scroll', function() {
+      if(timeoutId !== null)
+        clearTimeout(timeoutId);
+      timeoutId = setTimeout(function() {
+        var h = doc.scrollHeight;
+        var y = doc.scrollTop;
+        var h1 = window.innerHeight;
+        var r = h - y - h1;
+        cb({h: h, y: y, r: r, h1: h1});
+      }, after);
+    });
+  }
+  El.create = function(desc) {
+    desc = desc.split('|');
+    if(!desc[0])
+      throw new Error('El must specify tag');
+    var el = new El(document.createElement(desc[0]));
+    desc.shift();
+    if(desc.length !== 0)
+      loop(desc, function(prop) {
+        prop = bisect(prop, '=');
+        el.trait.set(prop[0], prop[1]);
+      });
+    return el;
+  }
+  El.build = function(desc, options) {
+    var el = El.create(desc);
+    if(options) {
+      if(options.props)
+        each(options.props, function(val, key) {
+          el.trait.set(key, val);
+        });
+      if(options.atts)
+        each(options.atts, function(val, key) {
+          el.trait.set(key, val, 'att');
+        });
+      if(options.children || options.constructor === Array)
+        loop(options.children || options, function(child) {
+          if(typeof child === 'string')
+            el.appendChild(El.create(child).el);
+          else if(child.constructor === Array)
+            el.appendChild(El.build(child[0], child[1]).el);
+          else if(typeof child === 'function')
+            el.appendChild(child());
+          else
+            el.appendChild(child);
+        });
+    }
+    return el;
+  }
+  El.prototype.clear = function() {
+    while(this.el.firstChild)
+      this.el.removeChild(this.el.firstChild);
+  }
+  El.prototype.on = function(event, cb) {
+    return El.on(this.el, event, cb);
+  }
+  El.prototype.inside = function(x, y) {
+    const rect = this.el.getBoundingClientRect();
+    return x > rect.left && x < rect.right &&
+      y > rect.top && y < rect.bottom;
+  }
+
+  function Val(init) {
+    this._val = init;
+    this._cbs = [];
+  }
+  Val.prototype.on = function(cb) {
+    this._cbs.push(cb);
+    cb(this._val);
+    return cb;
+  }
+  Val.prototype.off = function(cb) {
+    this.cbs = this._cbs.filter(function(_cb) {
+      return _cb !== cb;
+    });
+  }
+  Val.prototype.get = function() {
+    return this._val;
+  }
+  Val.prototype.set = function(newVal) {
+    var oldVal = this._val;
+    if(typeof newVal === 'function')
+      newVal = newVal(oldVal);
+    this._val = newVal;
+    this.notify(newVal, oldVal);
+  }
+  Val.prototype.notify = function(newVal, oldVal) {
+    this._cbs.forEach(function(_cb) {
+      _cb(newVal, oldVal);
+    });
+  }
+
+  window.tqjs = {
+    each: each,
+    loop: loop,
+    Trait: Trait,
+    Cls: Cls,
+    El: El,
+    Val: Val,
+  }
+
+
+})();
+/* com.App */
+(function() {
+
+  function isLarge() {
+    return window.innerWidth > 768;
+  }
+
+  var sidebar = tqjs.El.find('.sidebar');
+
+  var isOpen = new tqjs.Val(isLarge());
+  isOpen.on(function(val) {
+    if(val) sidebar.cls.replace('close', 'open');
+    else sidebar.cls.replace('open', 'close');
+  });
+
+  var win = new tqjs.El(window);
+  win.on('resize', function() {
+    if(isLarge())
+      isOpen.set(true);
+    else
+      isOpen.set(false);
+  });
+
+  var burger = tqjs.El.find('.burger');
+  burger.on('click', function() {
+    isOpen.set(true);
+  });
+
+  var main = tqjs.El.find('.main');
+  main.on('click', function hide(e) {
+    var inside = sidebar.inside(e.clientX, e.clientY);
+    if(!isLarge() && isOpen.get() && !inside)
+      isOpen.set(false);
+  });
+
+})();
+</script>
+</body>
+</html>

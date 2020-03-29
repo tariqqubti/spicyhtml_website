@@ -1,0 +1,71 @@
+<style>
+  .app {
+    height: 100%;
+  }
+  .app .toolbar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: none;
+  }
+  .app .main {
+    margin-left: 250px;
+    padding-top: 25px;
+  }
+  .app .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 250px; height: 100%;
+    transition: left .2s;
+  }
+  @media (max-width: 768px) {
+    /* small */
+    .app .toolbar {display: flex}
+    .app .main {margin-left: 0; padding-top: 100px}
+    .app .sidebar {left: -250px}
+  }
+  .app .sidebar.open {left: 0}
+  .app .sidebar.close {left: -250px}
+</style>
+
+<div id="__id__" class="app">
+  <com.Toolbar />
+  <com.Main>
+    __inner__
+  </com.Main>
+  <com.Sidebar />
+</div>
+
+<script>
+  function isLarge() {
+    return window.innerWidth > 768;
+  }
+
+  var sidebar = tqjs.El.find('.sidebar');
+
+  var isOpen = new tqjs.Val(isLarge());
+  isOpen.on(function(val) {
+    if(val) sidebar.cls.replace('close', 'open');
+    else sidebar.cls.replace('open', 'close');
+  });
+
+  var win = new tqjs.El(window);
+  win.on('resize', function() {
+    if(isLarge())
+      isOpen.set(true);
+    else
+      isOpen.set(false);
+  });
+
+  var burger = tqjs.El.find('.burger');
+  burger.on('click', function() {
+    isOpen.set(true);
+  });
+
+  var main = tqjs.El.find('.main');
+  main.on('click', function hide(e) {
+    var inside = sidebar.inside(e.clientX, e.clientY);
+    if(!isLarge() && isOpen.get() && !inside)
+      isOpen.set(false);
+  });
+</script>

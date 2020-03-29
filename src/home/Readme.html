@@ -1,0 +1,235 @@
+
+<h2 id="spicy-html-a-spicy-html-builder">Spicy Html (A spicy html builder)</h2>
+<p>A tool that helps encapsulate html components and makes it easy to reference and compose them.</p>
+<p>It also enables customization of html components at build time using props.</p>
+<p>It will also group all styles and scripts at build time to allow for smaller file sizes.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-sh">npm install spicyhtml --save</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Programmatically:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> {build} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
+
+build({
+  <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'My awesome site'</span>,
+    <span class="hljs-attr">primary</span>: <span class="hljs-string">'#333'</span>,
+  },
+  <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
+});</code></pre>
+<h2 id="components">Components</h2>
+<p>Any <code>.html</code> file within your project can be a component.
+It could be the header, the whole html document, just a script or a style tag, even plain text can be a component anything really can be a component.</p>
+<h2 id="references">References</h2>
+<p>You can reference components from other components. </p>
+<p>The rule is any tag with a name that either:</p>
+<ul>
+<li>Contains a dot e.g.  <code>&lt;com.Home /&gt;</code></li>
+<li>Starts with a Capital letter e.g. <code>&lt;Link /&gt;</code></li>
+</ul>
+<p>The root parameter sent to the build command will be the parent for all your components.</p>
+<p>For example if the root is <code>/home/projects/foo</code></p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- /home/projects/foo/pages/layout/Main.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>__inner__<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span></code></pre>
+<p>Will be referenced (from anywhere) like:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- home/projects/foo/com/About.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">pages.layout.Main</span>&gt;</span>
+  Stuff
+<span class="hljs-tag">&lt;/<span class="hljs-name">pages.layout.Main</span>&gt;</span></code></pre>
+<p>And</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Sidebar.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'sidebar'</span>&gt;</span>
+  ...sidebar stuff
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>Will be referenced by:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/OtherComponent.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com.Sidebar</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<h2 id="props">Props</h2>
+<p>You can send values to components in order to customize them.</p>
+<p>For example if the reference:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Field</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">Label</span>=<span class="hljs-string">"Name"</span> /&gt;</span></code></pre>
+<p>And the component:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Field.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"field"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>__label__<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"__type__"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>The output would be:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- Output --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"field"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>Name<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>All __prop_name__ values inside the component will be replaced with what was sent in the reference.</p>
+<p>Prop names are surrounded by two underscores.</p>
+<p>Props will propagate, what you send as props to some component will trickle down to its referenced components unless they were overridden down the tree.</p>
+<h3 id="the-special-inner-prop">The special <code>inner</code> prop</h3>
+<p><code>__inner__</code> will act as the place holder for the reference inner value, for example:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Link.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"__to__"</span>&gt;</span>__inner__<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Reference --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">com.Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/about"</span>&gt;</span>About<span class="hljs-tag">&lt;/<span class="hljs-name">com.Link</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Output --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/about"</span>&gt;</span>About<span class="hljs-tag">&lt;<span class="hljs-name">a</span>&gt;</span></code></pre>
+<p>You can also specify inner as a prop, if you don&#39;t want to bother writing a closing tag.</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/about"</span> <span class="hljs-attr">inner</span>=<span class="hljs-string">"About"</span> /&gt;</span></code></pre>
+<p>Though if the reference tag is not self-closing and actually have something inside, it will override the inner prop.</p>
+<h2 id="styles-and-scripts">Styles and Scripts</h2>
+<p>The builder will cache all styles and scripts tags it encounters during building, and add the first instance of them in the end of the building process.</p>
+<p>Adding the styles just before the ending of the <code>&lt;head&gt;</code> tag, and scripts just before the ending of the <code>&lt;body&gt;</code> tag.</p>
+<p>All scripts will be wrapped with a self invoking function, so you don&#39;t need to worry about overwriting an existing variable.</p>
+<pre><code class="language-html">...
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+  <span class="hljs-comment">/* com.Link */</span>
+  <span class="hljs-selector-class">.link</span> {<span class="hljs-attribute">color</span>: red}
+  <span class="hljs-comment">/* com.Field */</span>
+  <span class="hljs-selector-class">.field</span> <span class="hljs-selector-class">.input</span> {<span class="hljs-attribute">padding</span>: <span class="hljs-number">5px</span>}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">
+  (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">/* com.Link */</span>
+    <span class="hljs-keyword">var</span> foo = <span class="hljs-number">42</span>;
+  })();
+  (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">/* com.Field */</span>
+    <span class="hljs-keyword">var</span> foo = <span class="hljs-number">42</span>;
+  })();
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+...</code></pre>
+<h2 id="whats-the-point">What&#39;s the point</h2>
+<ul>
+<li>Encapsulate static html files using components.</li>
+<li>Reuse static html files by referencing them from other files.</li>
+<li>Small file sizes, check <a href="https://spicyhtml.com">Spicy Html</a> file sizes on dev tools, it&#39;s built with Spicy Html.</li>
+<li>Keeps the browser happy.</li>
+<li>The fact of the matter is that most users will view your website on bloated 8GB RAM machines, those machines do not like too much JavaScript.</li>
+<li>Work with html not against it, this tool is just a small step that makes working with static html a pleasure.</li>
+<li>Works well with BEM CSS methodology.</li>
+</ul>
+<h2 id="example">Example</h2>
+<ul>
+<li>There is a <a href="https://github.com/tariqqubti/spicyhtml/tree/master/example">small example</a> in this repo.</li>
+<li>Here is a quick example:</li>
+</ul>
+<pre><code>my-awesome-site
+  |--&gt; com
+    |-- Hero.html
+    |-- Document.html
+    |-- Sidebar.html
+    |-- Main.html
+  |--&gt; pages
+    |-- index.html
+    |-- about.html
+    |-- contact.html</code></pre><pre><code class="language-html"><span class="hljs-comment">&lt;!-- pages/index.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">com.Document</span>
+  <span class="hljs-attr">title</span>=<span class="hljs-string">"Home"</span>
+  <span class="hljs-attr">desc</span>=<span class="hljs-string">"my-awesome-site-home"</span>
+&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com.Hero</span> /&gt;</span>
+  Hello and welcome to __name__
+<span class="hljs-tag">&lt;/<span class="hljs-name">com.Document</span>&gt;</span></code></pre>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Document.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"__desc__"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>__title__<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">com.Sidebar</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>__title__<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">com.Main</span>&gt;</span>
+      __inner__
+    <span class="hljs-tag">&lt;/<span class="hljs-name">com.Main</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Hero.html --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+  <span class="hljs-selector-class">.hero</span> {
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">2rem</span>;
+  }
+  <span class="hljs-selector-class">.slide</span> {
+    <span class="hljs-attribute">background-color</span>: __primary__;
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'hero'</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide one<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide two<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-comment">// Your java script will be tucked inside</span>
+  <span class="hljs-comment">// a self-invoking function.</span>
+  <span class="hljs-keyword">const</span> slides = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.slide'</span>);
+  <span class="hljs-comment">// do stuff...</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>And build with</p>
+<pre><code class="language-js">build({
+  <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'My awesome site'</span>,
+    <span class="hljs-attr">primary</span>: <span class="hljs-string">'#333'</span>,
+  },
+  <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
+});</code></pre>
+<p>And output</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- index.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"my-awesome-site-home"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+      <span class="hljs-selector-class">.hero</span> {
+        <span class="hljs-attribute">padding</span>: <span class="hljs-number">2rem</span>;
+      }
+      <span class="hljs-selector-class">.slide</span> {
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#333</span>;
+      }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"sidebar"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'hero'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide one<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'slide'</span>&gt;</span>Slide two<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      Hello and welcome to My awesome site
+    <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+      (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-comment">/* com.Hero */</span>
+        <span class="hljs-keyword">const</span> slides = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.slide'</span>);
+      })();
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>node &gt;= 10</li>
+<li>chokidar (for watcher)</li>
+</ul>

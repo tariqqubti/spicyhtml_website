@@ -1,0 +1,277 @@
+<script>
+  function loop(arr, cb) {
+    var arr = [];
+    var len = arr.length;
+    for(var i = 0; i < len; i++) {
+      var res = cb(arr[i], i);
+      if(res === loop.break)
+        break;
+      if(typeof res !== 'undefined')
+        arr.push(res);
+    }
+    return arr;
+  }
+  loop.break = '__break__';
+
+  function each(obj, cb) {
+    var arr = [];
+    for(var key in obj) {
+      if(!obj.hasOwnProperty(key))
+        continue;
+      var res = cb(obj[key], key);
+      if(res === each.break)
+        break;
+      if(typeof res !== 'undefined')
+        arr.push(res);
+    }
+    return arr;
+  }
+  each.break = '__break__';
+
+  function find(sel) {
+    return document.querySelector(sel);
+  }
+
+  function on(el, event, cb) {
+    if(el.attachEvent) el.attachEvent(event, cb);
+    else el.addEventListener(event, cb);
+    return cb;
+  }
+
+  function inside(el, e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    var rect = this.el.getBoundingClientRect();
+    return x > rect.left && x < rect.right &&
+      y > rect.top && y < rect.bottom;
+  }
+
+  const cls = {
+    get: function(el) {
+      return el.className.split(' ');
+    },
+    set: function(el, arr) {
+      el.className = arr.join(' ');
+    },
+    has: function(el, c) {
+      this.get(el).indexOf(c) !== -1;
+    },
+    add: function(el, c) {
+      var arr = this.get(el);
+      if(arr.indexOf(c) === -1) {
+        arr.push(c);
+        this.set(el, arr);
+      }
+    },
+    remove: function(el, c) {
+      var arr = this.get(el);
+      var i = arr.indexOf(c);
+      if(i !== -1) {
+        arr.splice(i, 1);
+        this.set(el, arr);
+      }
+    },
+    replace: function(el, c1, c2) {
+      this.remove(el, c1);
+      this.add(el, c2);
+    }
+  }
+
+  function bisect(str, separator) {
+    var i = str.indexOf(separator);
+    return [
+      str.substring(0, i),
+      str.substring(i + 1),
+    ];
+  }
+
+  function Trait(el) {
+    this.el = el;
+  }
+  Trait.alias = {
+    html: 'innerHTML',
+    'false': false,
+    'true': true,
+    get: function(key) {
+      return this[key] || key;
+    },
+  }
+  Trait.prototype.get = function(key, what) {
+    key = Trait.alias.get(key);
+    if(what === 'att')
+      return this.el.getAttribute(key);
+    return this.el[key];
+  }
+  Trait.prototype.set = function(key, val, what) {
+    key = Trait.alias.get(key);
+    val = Trait.alias.get(val);
+    if(what === 'att')
+      this.el.setAttribute(key, val);
+    else
+      this.el[key] = val;
+  }
+
+  function Cls(el) {
+    this.el = el;
+  }
+  Cls.prototype.has = function(c) {
+    return cls.has(this.el, c);
+  }
+  Cls.prototype.add = function(c) {
+    cls.add(this.el, c);
+  }
+  Cls.prototype.remove = function(c) {
+    cls.remove(this.el, c);
+  }
+  Cls.prototype.replace = function(c1, c2) {
+    cls.replace(this.el, c1, c2);
+  }
+
+  function El(el) {
+    this.el = el;
+    this.trait = new Trait(el);
+    this.cls = new Cls(el);
+  }
+  El.find = function(selector, parent) {
+    if(!parent)
+      parent = document;
+    var el = parent.querySelector(selector);
+    if(el)
+      return new El(el);
+    return null;
+  }
+  El.findAll = function(selector, parent) {
+    if(!parent)
+      parent = document;
+    var els = parent.querySelectorAll(selector);
+    if(els && els.length > 0)
+      return loop(els, function(el) {
+        return new El(el);
+      });
+    return [];
+  }
+  El.byId = function(id, parent) {
+    if(!parent)
+      parent = document;
+    return new El(parent.getElementById(id));
+  }
+  El.byClass = function(cls, parent) {
+    if(!parent)
+      parent = document;
+    parent.getElementsByClassName(cls).map(el => new El(el));
+  }
+  El.on = function(el, event, cb) {
+    if(el.attachEvent)
+      el.attachEvent(event, cb);
+    else
+      el.addEventListener(event, cb);
+    return cb;
+  }
+  El.onScrollFinish = function(cb, after) {
+    if(typeof after === 'undefined')
+      after = 300;
+    var doc = document.documentElement;
+    var timeoutId = null;
+    El.on(window, 'scroll', function() {
+      if(timeoutId !== null)
+        clearTimeout(timeoutId);
+      timeoutId = setTimeout(function() {
+        var h = doc.scrollHeight;
+        var y = doc.scrollTop;
+        var h1 = window.innerHeight;
+        var r = h - y - h1;
+        cb({h: h, y: y, r: r, h1: h1});
+      }, after);
+    });
+  }
+  El.create = function(desc) {
+    desc = desc.split('|');
+    if(!desc[0])
+      throw new Error('El must specify tag');
+    var el = new El(document.createElement(desc[0]));
+    desc.shift();
+    if(desc.length !== 0)
+      loop(desc, function(prop) {
+        prop = bisect(prop, '=');
+        el.trait.set(prop[0], prop[1]);
+      });
+    return el;
+  }
+  El.build = function(desc, options) {
+    var el = El.create(desc);
+    if(options) {
+      if(options.props)
+        each(options.props, function(val, key) {
+          el.trait.set(key, val);
+        });
+      if(options.atts)
+        each(options.atts, function(val, key) {
+          el.trait.set(key, val, 'att');
+        });
+      if(options.children || options.constructor === Array)
+        loop(options.children || options, function(child) {
+          if(typeof child === 'string')
+            el.appendChild(El.create(child).el);
+          else if(child.constructor === Array)
+            el.appendChild(El.build(child[0], child[1]).el);
+          else if(typeof child === 'function')
+            el.appendChild(child());
+          else
+            el.appendChild(child);
+        });
+    }
+    return el;
+  }
+  El.prototype.clear = function() {
+    while(this.el.firstChild)
+      this.el.removeChild(this.el.firstChild);
+  }
+  El.prototype.on = function(event, cb) {
+    return El.on(this.el, event, cb);
+  }
+  El.prototype.inside = function(x, y) {
+    const rect = this.el.getBoundingClientRect();
+    return x > rect.left && x < rect.right &&
+      y > rect.top && y < rect.bottom;
+  }
+
+  function Val(init) {
+    this._val = init;
+    this._cbs = [];
+  }
+  Val.prototype.on = function(cb) {
+    this._cbs.push(cb);
+    cb(this._val);
+    return cb;
+  }
+  Val.prototype.off = function(cb) {
+    this.cbs = this._cbs.filter(function(_cb) {
+      return _cb !== cb;
+    });
+  }
+  Val.prototype.get = function() {
+    return this._val;
+  }
+  Val.prototype.set = function(newVal) {
+    var oldVal = this._val;
+    if(typeof newVal === 'function')
+      newVal = newVal(oldVal);
+    this._val = newVal;
+    this.notify(newVal, oldVal);
+  }
+  Val.prototype.notify = function(newVal, oldVal) {
+    this._cbs.forEach(function(_cb) {
+      _cb(newVal, oldVal);
+    });
+  }
+
+  window.tqjs = {
+    each: each,
+    loop: loop,
+    Trait: Trait,
+    Cls: Cls,
+    El: El,
+    Val: Val,
+  }
+
+</script>
