@@ -1,5 +1,5 @@
 
-<h2 id="spicy-html-a-spicy-html-builder">Spicy Html (A spicy html builder)</h2>
+<h2 id="spicy-html-a-spicy-html-builder"><a href="https://tariqqubti.github.io/spicyhtml_website/">Spicy Html</a> (A spicy html builder)</h2>
 <p>A tool that helps encapsulate html components and makes it easy to reference and compose them.</p>
 <p>It also enables customization of html components at build time using props.</p>
 <p>It will also group all styles and scripts at build time to allow for smaller file sizes.</p>
@@ -10,6 +10,18 @@
 <pre><code class="language-js"><span class="hljs-keyword">const</span> {build} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
 
 build({
+  <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'My awesome site'</span>,
+    <span class="hljs-attr">primary</span>: <span class="hljs-string">'#333'</span>,
+  },
+  <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
+});</code></pre>
+<p>Or using a watcher</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> {watch} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
+
+watch({
   <span class="hljs-attr">root</span>: <span class="hljs-string">'my-awesome-site'</span>,
   <span class="hljs-attr">entry</span>: <span class="hljs-string">'pages.index'</span>,
   <span class="hljs-attr">props</span>: {
@@ -54,7 +66,7 @@ It could be the header, the whole html document, just a script or a style tag, e
 <h2 id="props">Props</h2>
 <p>You can send values to components in order to customize them.</p>
 <p>For example if the reference:</p>
-<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Field</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">Label</span>=<span class="hljs-string">"Name"</span> /&gt;</span></code></pre>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Field</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Name"</span> /&gt;</span></code></pre>
 <p>And the component:</p>
 <pre><code class="language-html"><span class="hljs-comment">&lt;!-- com/Field.html --&gt;</span>
 
@@ -69,7 +81,7 @@ It could be the header, the whole html document, just a script or a style tag, e
   <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>Name<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
-<p>All __prop_name__ values inside the component will be replaced with what was sent in the reference.</p>
+<p>All <code>__prop_name__</code> values inside the component will be replaced with what was sent in the reference.</p>
 <p>Prop names are surrounded by two underscores.</p>
 <p>Props will propagate, what you send as props to some component will trickle down to its referenced components unless they were overridden down the tree.</p>
 <h3 id="the-special-inner-prop">The special <code>inner</code> prop</h3>
@@ -86,7 +98,7 @@ It could be the header, the whole html document, just a script or a style tag, e
 <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">com.Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/about"</span> <span class="hljs-attr">inner</span>=<span class="hljs-string">"About"</span> /&gt;</span></code></pre>
 <p>Though if the reference tag is not self-closing and actually have something inside, it will override the inner prop.</p>
 <h2 id="styles-and-scripts">Styles and Scripts</h2>
-<p>The builder will cache all styles and scripts tags it encounters during building, and add the first instance of them in the end of the building process.</p>
+<p>The builder will cache all styles and scripts tags it encounters during building, and add the first instance of them at the end of the building process.</p>
 <p>Adding the styles just before the ending of the <code>&lt;head&gt;</code> tag, and scripts just before the ending of the <code>&lt;body&gt;</code> tag.</p>
 <p>All scripts will be wrapped with a self invoking function, so you don&#39;t need to worry about overwriting an existing variable.</p>
 <pre><code class="language-html">...
@@ -114,7 +126,7 @@ It could be the header, the whole html document, just a script or a style tag, e
 <ul>
 <li>Encapsulate static html files using components.</li>
 <li>Reuse static html files by referencing them from other files.</li>
-<li>Small file sizes, check <a href="https://spicyhtml.com">Spicy Html</a> file sizes on dev tools, it&#39;s built with Spicy Html.</li>
+<li>Small file sizes, check <a href="https://tariqqubti.github.io/spicyhtml_website/">Spicy Html</a> file sizes on dev tools, it&#39;s built with Spicy Html.</li>
 <li>Keeps the browser happy.</li>
 <li>The fact of the matter is that most users will view your website on bloated 8GB RAM machines, those machines do not like too much JavaScript.</li>
 <li>Work with html not against it, this tool is just a small step that makes working with static html a pleasure.</li>
@@ -123,6 +135,7 @@ It could be the header, the whole html document, just a script or a style tag, e
 <h2 id="example">Example</h2>
 <ul>
 <li>There is a <a href="https://github.com/tariqqubti/spicyhtml/tree/master/example">small example</a> in this repo.</li>
+<li>Spicy Html&#39;s <a href="https://tariqqubti.github.io/spicyhtml_website">website</a> is open source, you can checkout its source code at this <a href="https://github.com/tariqqubti/spicyhtml_website">repository</a></li>
 <li>Here is a quick example:</li>
 </ul>
 <pre><code>my-awesome-site

@@ -4,7 +4,7 @@ const spicyhtml = require('spicyhtml');
 const writeReadme = require('./writeReadme');
 const minifyHtml = require('./minifyHtml');
 
-writeReadme();
+writeReadme(true);
 
 const outputDir = 'docs'
 
