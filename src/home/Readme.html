@@ -19,6 +19,7 @@ build({
   <span class="hljs-attr">output</span>: path.resolve(<span class="hljs-string">'static'</span>),
 });</code></pre>
 <p>Or using a watcher</p>
+<p>Make sure the output directory is outside the root directory when using the watcher to prevent infinite loop</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> {watch} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'spicyhtml'</span>);
 
 watch({
