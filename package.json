@@ -12,6 +12,6 @@
   "dependencies": {
     "highlight.js": "^9.18.1",
     "html-minifier": "^4.0.0",
-    "marked": "^0.8.2"
+    "marked": "^4.0.10"
   }
 }
